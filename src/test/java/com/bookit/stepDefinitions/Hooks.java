@@ -1,5 +1,6 @@
 package com.bookit.stepDefinitions;
 
+import com.bookit.utilities.DB_Util;
 import com.bookit.utilities.Driver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
