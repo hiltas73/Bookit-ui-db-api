@@ -28,8 +28,6 @@ public class BookitUtils {
     public static String generateTokenByRole(String role) {
 
         //returnCredentials(role);
-
-
         String token = given()
                 .queryParams(returnCredentials(role))
                 .when().get(Environment.BASE_URL + "/sign")

@@ -94,4 +94,11 @@ public class APIStepDefinitions {
 
 
     }
+
+    @Then("UI,API and Database user information must be match")
+    public void uiAPIAndDatabaseUserInformationMustBeMatch() {
+
+
+
+    }
 }
