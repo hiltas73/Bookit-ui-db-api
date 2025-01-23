@@ -1,6 +1,6 @@
 package com.bookit.stepDefinitions;
 
-import com.bookit.utilities.DB_Util;
+import com.bookit.utilities.DBUtil;
 import com.bookit.utilities.Driver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -15,13 +15,13 @@ public class Hooks {
     @Before("@db")
     public void dbHook() {
         System.out.println("creating database connection");
-        DB_Util.createConnection();
+        DBUtil.createConnection();
     }
 
     @After("@db")
     public void afterDbHook() {
         System.out.println("closing database connection");
-        DB_Util.destroy();
+        DBUtil.destroy();
 
     }
 
