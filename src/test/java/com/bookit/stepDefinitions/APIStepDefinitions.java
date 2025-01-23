@@ -2,10 +2,13 @@ package com.bookit.stepDefinitions;
 
 import com.bookit.utilities.BookitUtils;
 import com.bookit.utilities.ConfigurationReader;
+import com.bookit.utilities.DBUtil;
 import com.bookit.utilities.Environment;
 import io.cucumber.java.en.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+
+import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 import static org.junit.Assert.assertEquals;
@@ -14,6 +17,7 @@ public class APIStepDefinitions {
 
     String token;
     Response response;
+    String globalEmail;
 
     @Given("I logged Bookit api as a {string}")
     public void i_logged_bookit_api_as_a(String role) {
@@ -24,6 +28,9 @@ public class APIStepDefinitions {
         // just checking if the environment changes from config.prop file working
         // String baseUrl = Environment.BASE_URL;
         // System.out.println("baseUrl = " + baseUrl);
+
+        Map<String, String> credentialsMap = BookitUtils.returnCredentials(role);
+        globalEmail = credentialsMap.get("email");
 
 
     }
@@ -56,4 +63,35 @@ public class APIStepDefinitions {
         // response.prettyPrint();
     }
 
+    @Then("the information about current user from api and database should match")
+    public void theInformationAboutCurrentUserFromApiAndDatabaseShouldMatch() {
+
+        // get firstName + lastName + role from api as actual data
+        String actualFirstName = response.path("firstName");
+        String actualLastName = response.path("lastName");
+        String actualRole = response.path("role");
+
+        // get data from database
+        String query = "select firstname,lastname,role from users\n" +
+                "where email='" + globalEmail + "'";
+
+        // run query
+        DBUtil.runQuery(query);
+
+        // get the result inside a map
+        Map<String, String> dbMap = DBUtil.getRowMap(1);
+
+        // display all data from the db
+        DBUtil.displayAllData();
+
+        // compare the actual data with the expected data from the database
+        assertEquals(actualFirstName, dbMap.get("firstname"));
+        assertEquals(actualLastName, dbMap.get("lastname"));
+        assertEquals(actualRole, dbMap.get("role"));
+
+        // destroy the connection
+        DBUtil.destroy();
+
+
+    }
 }
