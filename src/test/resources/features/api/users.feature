@@ -8,7 +8,7 @@ Feature: User Verification
     And role is "student-team-member"
 
     # API vs DB ---> Two point verification
-  @db @wip
+  @db
   Scenario: verify information about logged user from api and database
     Given I logged Bookit api as a "teacher"
     When I sent get request to "/api/users/me" endpoint
