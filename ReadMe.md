@@ -22,6 +22,8 @@ This project is a comprehensive testing framework developed using **Java**, **Se
 - **PostgreSQL**: A powerful, open-source relational database used for storing test data and verifying database interactions.
 
 - **RestAssured**: A Java library for testing RESTful APIs, enabling easy verification of API responses.
+- **Tabnine AI**: Tabnine is the AI code assistant that you control — helping development teams of every size use AI to accelerate and simplify the software development process without sacrificing privacy, security, or compliance. 
+  - Tabnine provides intelligent, context-aware suggestions that adapt as I write, allowing for faster development and fewer errors. Its ability to suggest entire functions and generate code from natural language comments streamlined my workflow and improved overall productivity. By integrating Tabnine into my development environment, I was able to focus more on solving complex problems rather than getting bogged down by syntax and boilerplate code.
 
 ## Project Structure
 
@@ -51,6 +53,10 @@ This command will execute all tests defined in your feature files. You can also 
 
 ```bash
 mvn test -Dcucumber.options="classpath:features/your_feature_file.feature"
+```
+You can also specify the environment information from terminal:
+```bash
+mvn test -Denvironment=qa3
 ```
 
 ## Conclusion
