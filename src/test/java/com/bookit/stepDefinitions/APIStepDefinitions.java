@@ -45,8 +45,8 @@ public class APIStepDefinitions {
     @Then("status code should be {int}")
     public void status_code_should_be(int expectedStatusCode) {
         int actualStatusCode = response.statusCode();
-        // System.out.println("actualStatusCode = " + actualStatusCode);
-        // System.out.println("expectedStatusCode = " + expectedStatusCode);
+        System.out.println("actualStatusCode = " + actualStatusCode);
+        System.out.println("expectedStatusCode = " + expectedStatusCode);
         assertEquals("status code test", expectedStatusCode, actualStatusCode);
     }
     @Then("content type is {string}")
@@ -172,4 +172,25 @@ public class APIStepDefinitions {
         DBUtil.destroy();
 
     }
+
+    @When("I send POST request {string} endpoint with following information")
+    public void i_send_post_request_endpoint_with_following_information(String endPoint, Map<String, String> studentInfo) {
+        response = given().contentType(ContentType.JSON)
+                .queryParams(studentInfo)
+                .header("Authorization", token)
+                .when().post(Environment.BASE_URL + endPoint);
+    }
+    @Then("I delete previously added student")
+    public void i_delete_previously_added_student() {
+        // get the id of the last added student from the last POST request
+        int IDtoDelete = response.path("entryID");
+        // Send DELETE request to IDToDelete path parameter
+        given().contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .pathParam("id", IDtoDelete)
+                .when()
+                .delete(Environment.BASE_URL + "/api/students/{id}")
+                .then().statusCode(204);
+    }
+
 }
