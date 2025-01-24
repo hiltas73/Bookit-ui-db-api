@@ -193,4 +193,54 @@ public class APIStepDefinitions {
                 .then().statusCode(204);
     }
 
+    /**
+     * TEAM
+     *
+     */
+    Map<String,String> expectedMap;
+    int newTeamID;
+
+
+    @When("Users sends POST request to {string} with following info:")
+    public void users_sends_post_request_to_with_following_info(String endpoint, Map<String,String> dataMap) {
+        response = given().accept(ContentType.JSON)
+                .queryParams(dataMap)
+                .header("Authorization", token)
+                .when().post(Environment.BASE_URL + endpoint);
+
+        // For doing an assertion
+        expectedMap=dataMap;
+    }
+
+    @Then("Database should persist same team info")
+    public void database_should_persist_same_team_info() {
+        newTeamID = response.path("entryiId");
+        System.out.println("------------> NEW TEAM ID is "+newTeamID);
+
+        String query="select name,location,batch_number from team t inner join campus c " +
+                "on t.campus_id=c.id " +
+                "where t.id="+newTeamID;
+
+        DBUtil.runQuery(query);
+
+        Map<String, String> actualMap = DBUtil.getRowMap(1);
+        System.out.println("actualMap = " + actualMap);
+
+
+        assertEquals(expectedMap.get("team-name"),actualMap.get("name"));
+        assertEquals(expectedMap.get("batch-number"),actualMap.get("batch_number"));
+        assertEquals(expectedMap.get("campus-location"),actualMap.get("location"));
+
+    }
+    @Then("User deletes previously created team")
+    public void user_deletes_previously_created_team() {
+
+        given().accept(ContentType.JSON)
+                .header("Authorization", token)
+                .pathParam("id", newTeamID)
+                .when().delete(Environment.BASE_URL + "/api/teams/{id}")
+                .then().statusCode(200);
+
+        System.out.println("------------> NEW TEAM ID is DELETED " + newTeamID);
+    }
 }
